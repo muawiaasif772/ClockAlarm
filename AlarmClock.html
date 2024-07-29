@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Clock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        #CurrentTime{
+            color: #fff;
+            font-weight: 900;
+            font-size: 35px;
+            font-family: sans-serif;
+        }
+        body, .wrapper, .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        body {
+            min-width: 100vh;
+        }
+        .wrapper {
+           
+            background-color: darkorange;
+
+            width: 440px;
+            border-radius: 10px;
+            flex-direction: column;
+            padding: 30px 30px 38px;
+             box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
+        }
+        .wrapper h1 {
+            font-size: 38px;
+            font-weight: 500;
+            margin: 30px 0;
+        }
+        .wrapper, .content {
+            /* background-color: cadetblue; */
+            width: 720px;
+        }
+        .content, .column {
+            /* border: 1px solid; */
+            border-radius: 5px;
+            width: 200px;
+            /* border-right: 12px; */
+        }
+        .column select {
+            background-color: rgb(197, 203, 215);
+
+            outline: none;
+            border: none;
+            height: 53px;
+            width: 178px;
+            font-size: 19px;
+            border-radius: 5px;
+            /* border-right: 10px; */
+        }
+        .wrapper button {
+            width: 440px;
+            outline: none;
+            border: none;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 20px;
+            padding: 17px 0px;
+            border-radius: 5px;
+            background-color: black;
+            font-family: sans-serif;
+            font-weight: 900;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1 id="CurrentTime">00:00:00 PM</h1>
+        <div class="content">
+            <div class="column">
+                <select id="hours">
+                    <option value="" selected hidden>Hour</option>
+                </select>
+            </div>
+            <div class="column">
+                <select id="minutes">
+                    <option value="" selected hidden>Min</option>
+                </select>
+            </div>
+            <div class="column">
+                <select id="seconds">
+                    <option value="" selected hidden>Sec</option>
+                </select>
+            </div>
+            <div class="column">
+                <select id="ampm">
+                    <option value="AM/PM" selected hidden>AM/PM</option>
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+        </div>
+        <button id="setAlarm">Set Alarm</button>
+        <audio id="alarmSound"  src="WhatsApp Audio 2024-07-29 at 4.40.28 PM.mpeg"preload="auto"></audio>
+    </div>
+    <script>
+        const selectHours = document.getElementById('hours');
+        const selectMinutes = document.getElementById('minutes');
+        const selectSeconds = document.getElementById('seconds');
+        const selectAMPM = document.getElementById('ampm');
+        const CurrentTime = document.getElementById('CurrentTime');
+        const setAlarmButton = document.getElementById('setAlarm');
+        const alarmSound = document.getElementById('alarmSound');
+
+        let alarmTime = null;
+
+        for (let i = 1; i <= 12; i++) {
+            let option = document.createElement('option');
+            option.value = i < 10 ? '0' + i : i;
+            option.text = i < 10 ? '0' + i : i;
+            selectHours.appendChild(option);
+        }
+
+        for (let i = 0; i < 60; i++) {
+            let option = document.createElement('option');
+            option.value = i < 10 ? '0' + i : i;
+            option.text = i < 10 ? '0' + i : i;
+            selectMinutes.appendChild(option);
+            // selectSeconds.appendChild(option);
+        } 
+        for (let i = 0; i < 60; i++) {
+            let option = document.createElement('option');
+            option.value = i < 10 ? '0' + i : i;
+            option.text = i < 10 ? '0' + i : i;
+            // selectMinutes.appendChild(option);
+            selectSeconds.appendChild(option);
+        }
+
+        setInterval(() => {
+            let date = new Date();
+            let h = date.getHours();
+            let m = date.getMinutes();
+            let s = date.getSeconds();
+            let newHours = h % 12 || 12;
+            let ampm = h < 12 ? 'AM' : 'PM';
+            CurrentTime.innerHTML = `${newHours < 10 ? '0' + newHours : newHours}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s} ${ampm}`;
+            let currentTime = `${newHours < 10 ? '0' + newHours : newHours}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s} ${ampm}`;
+                if (currentTime === alarmTime) {
+                    alarmSound.play();
+                    alarmTime = null; 
+                }
+            
+        }, 1000);
+
+        setAlarmButton.addEventListener('click', () => {
+            let h = selectHours.value;
+            let m = selectMinutes.value;
+            let s = selectSeconds.value;
+            let ampm = selectAMPM.value;
+
+            if (h === "" || m === "" || s === "" || ampm === "AM/PM") {
+                alert("Please select a valid time for the alarm.");
+                return;
+            }
+
+            alarmTime = `${h}:${m}:${s} ${ampm}`;
+            alert(`Alarm set for ${alarmTime}`);
+        });
+       
+        
+    </script>
+</body>
+</html>
